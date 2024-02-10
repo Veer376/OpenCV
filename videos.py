@@ -1,17 +1,23 @@
-import cv2 as cv
-cap=cv.VideoCapture(0)
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
+#Saving a Video
 
-while True:
-    ret, frame=cap.read()
+import numpy as np
+import cv2 as cv
+cap = cv.VideoCapture(0)
+# Define the codec and create VideoWriter object
+fourcc = cv.VideoWriter_fourcc(*'mp4v')
+out = cv.VideoWriter('video_out.mp4', fourcc, 20.0, (640,  480))
+while cap.isOpened():
+    ret, frame = cap.read()
     if not ret:
         print("Can't receive frame (stream end?). Exiting ...")
         break
-    flipedimage=cv.flip(frame, 1)
-    cv.imshow("frame", flipedimage)
-    if cv.waitKey(1)==ord('q'):
+    frame = cv.flip(frame, 0)
+    # write the flipped frame
+    out.write(frame)
+    cv.imshow('frame', frame)
+    if cv.waitKey(1) == ord('q'):
         break
-cv.release()
+# Release everything if job is finished
+cap.release()
+out.release()
 cv.destroyAllWindows()
